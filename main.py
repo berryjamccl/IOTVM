@@ -22,12 +22,12 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 
-
-
+mqtt_server_hive = "public.mqtthq.com"
+port_hive = 1883
 username_hive = "predict"
 pw_hive = "predict7"
-mqtt_server_hive = "b380b9e0975944e0aad0cb5f55c35094.s1.eu.hivemq.cloud"
-port_hive = 8883
+# mqtt_server_hive = "b380b9e0975944e0aad0cb5f55c35094.s1.eu.hivemq.cloud"
+# port_hive = 8883
 client_hive = 0
 
 username_tum = "JWT"
@@ -108,13 +108,35 @@ def connect_hive():
     # using MQTT version 5 here, for 3.1.1: MQTTv311, 3.1: MQTTv31
     # userdata is user defined data of any type, updated by user_data_set()
     # client_id is the given name of the client
+    # print("hive0")
+    # client_hive = paho.Client(client_id="", userdata=None, protocol=paho.MQTTv5)
+    # client_hive.on_connect = on_connect
+    # # set username and password
+    # # enable TLS for secure connection
+    # client_hive.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
+    # client_hive.username_pw_set(username_hive, pw_hive)
+    # # connect to HiveMQ Cloud on port 8883 (default for MQTT)
+    # print("hive connecting")
+    # client_hive.connect(mqtt_server_hive, port_hive)
+    # print("hive connected")
+    # # setting callbacks, use separate functions like above for better visibility
+    # client_hive.on_subscribe = on_subscribe
+    # client_hive.on_message = on_message
+    # client_hive.on_publish = on_publish
+    # # subscribe to all topics of encyclopedia by using the wildcard "#"
+    # # client_hive.subscribe("encyclopedia/#", qos=1)
+    # client_hive.loop_start()
+    # print("hive1")
+    # return client_hive
+
+
     print("hive0")
-    client_hive = paho.Client(client_id="", userdata=None, protocol=paho.MQTTv5)
+    client_hive = paho.Client()
     client_hive.on_connect = on_connect
     # set username and password
     # enable TLS for secure connection
-    client_hive.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
-    client_hive.username_pw_set(username_hive, pw_hive)
+    # client_hive.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
+    # client_hive.username_pw_set(username_hive, pw_hive)
     # connect to HiveMQ Cloud on port 8883 (default for MQTT)
     print("hive connecting")
     client_hive.connect(mqtt_server_hive, port_hive)
@@ -130,12 +152,11 @@ def connect_hive():
     return client_hive
 
 
-
 def publish_hive(client_hive, msg):
     # msg = "{\"username\":\"%s\",\"%s\":%d,\"device_id\":\"%d\",\"timestamp\":%lu000}" % (
     # groupname, sensor_name, predict_value, deviceid, timestamp)
     print(msg)
-    result = client_hive.publish(topic, msg)
+    result = client_hive.publish(topic, msg, qos=1)
     status = result[0]
     if status == 0:
         print(f"Send `{msg}` to HiveMQ topic `{topic}`")
