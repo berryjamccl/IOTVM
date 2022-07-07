@@ -175,18 +175,12 @@ if __name__ == '__main__':
     publish_tum(client_tum, msg)
     time.sleep(120)
     while (True) :
-        # if connected:
-        #     time.sleep(60)
-        # else:
-        #     client = connect_mqtt()
-        # time.sleep(60)
         if (int(time.time()) + 900 < timestamp):
             print(int(time.time()))
             print(timestamp)
             print("<, ")
             time.sleep(10)
         else:
-            # requests.get('http://138.246.236.111:31001/api/v1/web/guest/default/func-9-action-modeljaegermodified-109')
             mod = download_model()
             msg = forecast15(mod)
             publish_broker(client_broker, msg)
